@@ -12,10 +12,10 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-4 d-flex justify-content-between">
+                        <div class="col-sm-4 d-flex justify-content-between mb-3">
                             <input type="hidden" name="date" class="form-control input-sm" id="date" value="{{ old('date', date('Y-m-d')) }}" style="margin-right:10px;">
                             <input type="text" name="amount" class="form-control input-sm" id="amount" style="margin-right:10px;">
-                            <input type="submit" class="btn btn-success ml-2" value="Submit">
+                            <input type="submit" class="btn btn-success ml-2" value="Submit">&nbsp;
                         </div>
                         <div class="col-sm-4">
                                 @if($errors->has('amount'))
@@ -23,6 +23,38 @@
                                         <i class="fas fa-info-circle"></i>&nbsp;{{ $errors->first('amount') }}
                                     </span>
                                 @endif
+                            </div>
+                            <div class=" col-sm-12 text-right mb-2">
+                                <span id="toggle-table-btn" class="btn btn-primary">
+                                    <i id="toggle-icon" class="fas fa-minus"></i> Hide Income Table
+                                </span>
+                            </div>
+                            <div class="show-incomeTable">
+                                <table class="table table-bordered text-wrap mt-5" id="income-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center">SNo</th>
+                                            <th class="text-center">Date</th>
+                                            <th class="text-center">Amount</th>
+                                            <th class="text-center delete">Delete</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        @php $i=1; @endphp
+                                        @foreach ($income as $incomes)
+                                        <tr>
+                                            <td>{{ $i++ }}</td>
+                                            <td>{{ date('d-m-Y', strtotime($incomes->date)) }}</td>
+                                            <td>{{ $incomes->amount }}</td>
+                                            <td>
+                                                <span class="btn btn-danger" onclick="amountDetails('{{ $incomes->id }}')">
+                                                    <i class="fa fa-trash"></i>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
                             </div>
                     </div>
                 </div>
@@ -222,6 +254,53 @@ $(document).ready(function () {
         });
 
 });
+
+function amountDetails(income){
+    var destroyIncome = "{{ route('destroyIncome', ':income') }}".replace(':income', income);
+    $.ajax({
+        url: destroyIncome,
+        type: 'DELETE',
+        data: {
+            _method: 'DELETE',
+            _token: '{{ csrf_token() }}'
+        },
+        success: function(response){
+            location.reload();
+        },
+        error: function (response){
+            Swal.fire('Error!', 'There was an something issue','error');
+        }
+    });
+}
+
+$(document).ready(function() {
+        $("#toggle-table-btn").click(function() {
+            $(".show-incomeTable").toggle(); // Show/hide table
+            let icon = $("#toggle-icon");
+
+            // Change icon and button text dynamically
+            if (icon.hasClass("fa-plus")) {
+                icon.removeClass("fa-plus").addClass("fa-minus");
+                $(this).html('<i id="toggle-icon" class="fas fa-minus"></i> Hide Income Table');
+                $(".delete").trigger("click");
+            } else {
+                icon.removeClass("fa-minus").addClass("fa-plus");
+                $(this).html('<i id="toggle-icon" class="fas fa-plus"></i> Show Income Table');
+            }
+        });
+
+        if ($("#toggle-icon").hasClass("fa-minus")) {
+            $("#toggle-table-btn").trigger("click"); // Click the button if icon is minus
+        }
+});
+
+$(document).ready(function() {
+        initializeDataTable('#income-table', {
+            scrollY: '520px',
+            order: [[1, 'desc']]  
+        });
+    });
+
 </script>
 
 @endsection

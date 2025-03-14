@@ -29,7 +29,16 @@ class ATMController extends Controller
 
     public function dashboard()
     {
-        return view('dashboard');
+        $today = Carbon::now()->toDateString(); // Returns "YYYY-MM-DD"
+        $income = DB::table('table_income')->where('date', $today)->orderBy('id', 'desc')->get();
+
+        return view('dashboard',['income'=> $income]);
+    }
+
+    public function destroyIncome($destroyIncome){
+        $query = DB::table('table_income')->where('id', $destroyIncome)->delete();
+
+        return $query;
     }
 
     /**
@@ -345,6 +354,7 @@ public function getAllTransactionData()
             return redirect()->back()->with('flash_success','')->with('', $income);
         }
     }
+
     public function getDailyIncome()
     {
         $incomeData = DB::table('table_income')

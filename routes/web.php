@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth:admin'], function(){
 //Transaction
     Route::get('/dashboard',[ATMController::class,'dashboard'])->name('dashboard');
     Route::any('/store/income',[ATMController::class,'income'])->name('income');
+    Route::any('/destroyIncome/{income}',[ATMController::class,'destroyIncome'])->name('destroyIncome');
     Route::get('/daily-income', [ATMController::class, 'getDailyIncome']);
     Route::get('/monthly-income', [ATMController::class, 'getMonthlyIncome']);
     Route::get('/transaction/index',[ATMController::class,'index'])->name('atm.index');
