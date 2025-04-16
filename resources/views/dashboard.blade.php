@@ -71,13 +71,13 @@
         </div>
         <div class="card-body">
             <div id="dailyIncomeChartContainer">
-                <h2 class="text-center">Daily Income Chart (Current Month)</h2>
+                <h2 class="text-center">This Month</h2>
                 <div style="width: 800px; height: 400px; margin: auto;">
                     <canvas id="dailyIncomeChart"></canvas>
                 </div>
             </div>
             <div id="monthlyIncomeChartContainer" style="display: none;">
-                <h2 class="text-center">Monthly Income Chart (Current Year)</h2>
+                <h2 class="text-center">This Year</h2>
                 <div style="width: 800px; height: 400px; margin: auto;">
                     <canvas id="monthlyIncomeChart"></canvas>
                 </div>
@@ -96,13 +96,13 @@
         </div>
         <div class="card-body">
             <div id="dailyChartContainer">
-                <h2 class="text-center">Daily Transaction Chart (Current Month)</h2>
+                <h2 class="text-center">This Month</h2>
                 <div style="width: 800px; height: 400px; margin: auto;">
                     <canvas id="dailyTransactionChart"></canvas>
                 </div>
             </div>
             <div id="monthlyChartContainer" style="display: none;">
-                <h2 class="text-center">Monthly Transaction Chart (Current Year)</h2>
+                <h2 class="text-center">This Year</h2>
                 <div style="width: 800px; height: 400px; margin: auto;">
                     <canvas id="monthlyTransactionChart"></canvas>
                 </div>
