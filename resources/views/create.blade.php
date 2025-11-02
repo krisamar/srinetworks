@@ -168,7 +168,7 @@
                                                         <div class="input-group-pretend">
                                                             <span class="input-group-text bg-secondary"><i class="fas fa-pencil-alt"></i></span>
                                                         </div>
-                                                        <input type="file" name="image" class="form-control input-sm" placeholder="Image">
+                                                        <input type="file" name="image[]" multiple class="form-control input-sm" placeholder="Image" >
                                                     </div>
                                                     @if($errors->has('image'))
                                                         <span class="form-text form-danger fwb">

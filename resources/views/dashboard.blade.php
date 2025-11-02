@@ -134,57 +134,70 @@ $(document).ready(function () {
         $("#showDaily").addClass("btn-secondary").removeClass("btn-primary");
     });
 
-    // Fetch and Display Daily Transactions Chart
     fetch("{{ url('/daily-transactions') }}")
-        .then(response => response.json())
-        .then(data => {
-            if (!data.labels.length || !data.totalTransactions.length) {
-                alert("No daily transaction data available.");
-                return;
-            }
-            const ctx = document.getElementById("dailyTransactionChart").getContext("2d");
-            new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        label: "Total Daily Transactions",
-                        data: data.totalTransactions,
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById("dailyTransactionChart").getContext("2d");
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: "Fund Transfer",
+                        data: data.atmTransactions,
                         borderColor: "#36A2EB",
                         backgroundColor: "rgba(54, 162, 235, 0.2)",
                         fill: true,
                         tension: 0.4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+                    },
+                    {
+                        label: "AEPS Transactions",
+                        data: data.aepsTransactions,
+                        borderColor: "#FF0000", // red line
+                        backgroundColor: "rgba(255,0,0,0.1)",
+                        fill: false,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
         });
+    });
+
 
     // Fetch and Display Monthly Transactions Chart
     fetch("{{ url('/monthly-transactions') }}")
-        .then(response => response.json())
-        .then(data => {
-            if (!data.labels.length || !data.monthlyTransactions.length) {
-                alert("No monthly transaction data available.");
-                return;
-            }
-            const ctx = document.getElementById("monthlyTransactionChart").getContext("2d");
-            new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: data.labels,
-                    datasets: [{
-                        label: "Total Monthly Transactions",
-                        data: data.monthlyTransactions,
-                        borderColor: "#FF6384",
-                        backgroundColor: "rgba(255, 99, 132, 0.2)",
+    .then(response => response.json())
+    .then(data => {
+        const ctx = document.getElementById("monthlyTransactionChart").getContext("2d");
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: data.labels,
+                datasets: [
+                    {
+                        label: "Fund Transfer",
+                        data: data.atmTransactions,
+                        borderColor: "#36A2EB",
+                        backgroundColor: "rgba(54, 162, 235, 0.2)",
                         fill: true,
                         tension: 0.4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false }
-            });
+                    },
+                    {
+                        label: "AEPS Transactions",
+                        data: data.aepsTransactions,
+                        borderColor: "#FF0000", // red line
+                        backgroundColor: "rgba(255,0,0,0.1)",
+                        fill: false,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false }
         });
+    });
+
 
     // Toggle Between Daily and Monthly Income Graphs
     $("#showIncomeDaily").click(function () {

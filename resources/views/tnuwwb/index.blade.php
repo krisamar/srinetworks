@@ -7,9 +7,44 @@
     $(document).ready(function() {
         initializeDataTable('#tnuwwb-table', {
             scrollY: '520px',
-            order: [[1, 'desc']]  
+            order: [] 
         });
     });
+
+    function deleteDetails(data){
+            var btnText = 'Delete';
+            var btnColor = '#f44336';
+            var destroyUrl = "{{ route('tnuwwb.destroy',':data') }}".replace(':data', data);
+
+            Swal.fire({
+                title : "Are you sure want to"+ btnText +"?",
+                text : "",
+                showCancelButton : true,
+                icon : "warning",
+                confirmButtonText : btnText,
+                confirmButtonColor : btnColor,
+                cancelButtonText : "Cancel"
+            }).then((result) => {
+                if(result.isConfirmed){
+                    $.ajax({
+                        url : destroyUrl,
+                        type : 'DELETE',
+                        data : {
+                            _method : 'DELETE',
+                            _token : '{{csrf_token()}}'
+                        },
+                        success: function(response){
+                            Swal.fire('Deleted!', 'The TNUWWB Details deleted successfully','success');
+                            location.reload();
+                        },
+                        error: function(response){
+                            Swal.fire('Error!', 'There was something issue', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
 </script>
 
 <div class="container-fluid">
@@ -37,12 +72,12 @@
                         <th>ID No</th>
                         <th>Type</th>
                         <th>Remarks</th>
-                        <th></th>
+                        <th class="col-sm-1"></th>
                     </tr>
                 </thead>
                 <tbody>
+                @php $i = 1; @endphp
                     @foreach($data as $datas)
-                    @php $i = 1; @endphp
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ \Carbon\Carbon::parse($datas['date'])->format('d-m-Y') }}</td>
@@ -66,13 +101,22 @@
                         <td>{{$tent[$datas->type] ?? 'Unknown'}}</td>
                         <td>{{ $datas['remarks'] }}</td>
                         <td>
-                            <span class="bg-danger p-2 mr-2" onclick="deleteDetails('{{$datas->id}}')">
-                                <i class="fa fa-trash text-white"></i>
-                            </span>
-                            <a href="{{route('tnuwwb.edit',['data'=>$datas])}}" class="bg-info p-2  text-white">
-                                <i class="fas fa-edit text-white"></i>
-                            </a>
-                        </td>
+    <!-- Edit Button -->
+    <a href="{{ route('tnuwwb.edit', ['data' => $datas]) }}" class="btn btn-sm btn-info text-white mr-2">
+        <i class="fas fa-edit"></i>
+    </a>
+
+    <!-- Delete Button -->
+    <button type="button" class="btn btn-sm btn-danger text-white mr-2" onclick="deleteDetails('{{ $datas->id }}')">
+        <i class="fa fa-trash"></i>
+    </button>
+
+    <!-- PDF Download Button -->
+    <a href="{{ route('tnuwwb.pdf', $datas->id) }}" class="btn btn-sm btn-warning text-white" target="_blank">
+        <i class="fas fa-file-pdf"></i>
+    </a>
+</td>
+
                     </tr>
                     @endforeach
                 </tbody>

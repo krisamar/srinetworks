@@ -57,8 +57,8 @@
 												</li>
 										</ol>
 								</div>
-								<form action="{{ route('tnuwwb.store') }}" method="POST">
-										@csrf
+									<form action="{{ route('tnuwwb.update', $data) }}" method="POST">
+									@csrf
 										<div class="col-md-12 mt-2">
 												<div class="row">
 														<div class="card">

@@ -3,6 +3,28 @@
 @section('title', 'Employee View')
 
 @section('content')
+<script>
+    function deleteImage(employeeId, index) {
+        let destroyUrl = `/employee/${employeeId}/image/${index}`;
+
+        $.ajax({
+            url: destroyUrl,
+            type: 'POST', // Laravel only supports GET & POST natively
+            data: {
+                _method: 'DELETE',
+                _token: '{{ csrf_token() }}'
+            },
+            success: function(response) {
+                Swal.fire('Deleted!', 'Image deleted successfully.', 'success').then(() => {
+                    location.reload(); // or remove the image from DOM instead of reloading
+                });
+            },
+            error: function(error) {
+                Swal.fire('Error!', 'Something went wrong.', 'error');
+            }
+        });
+    }
+</script>
     <div class="container-fluid">
         <h1>Employee View</h1>
         <div class="col-sm-12 d-flex justify-content-between">
@@ -40,11 +62,22 @@
                             <td>City</td>
                             <td>{{$employee->city}}</td>
                         </tr>
+                        <tr>
+                            <td>Documents</td>
+                            <td>
+                            @foreach($employee->image as $key => $img)
+                                                            
+                                                                <div class="row col-md-12">
+                                                                    <img src="{{ asset($img['image']) }}" alt="image"
+                                                                        style="height: 150px; width: 150px; object-fit:contain; margin-left: 20px;">
+                                                                </div>
+                                                                <a href="#" class="btn btn-danger" onclick="deleteImage({{ $employee->id }}, {{$key}})">Delete</a>
+                                                            
+                                                    @endforeach
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-                <div class="row col-sm-2">
-                    <img src="{{asset('images/'.$employee->image)}}" alt="image" style="height: 150px; width: 150px; object-fit:contain;margin-left: 20px;">
-                </div>
             </div>
         </div>
     </div>

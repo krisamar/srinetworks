@@ -19,6 +19,7 @@ class TNUWWBModel extends Model
         'name',
         'paid',
         'status',
+        'others',
         'id_no',
         'type',
         'remarks',

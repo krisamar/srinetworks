@@ -44,7 +44,7 @@
 										<div class="card-text row mt-3">
 											<label for="password" class="fol-form-label col-sm-4">Password</label>
 											<div class="col-sm-8">
-												<input type="text" id="password" class="input-sm form-control" name="password">
+												<input type="password" id="password" class="input-sm form-control" name="password">
 												@if($errors->has('password'))
 													<span class="form-danger form-text fwb">
 														<i class="fas fa-info-circle"></i>{{$errors->first('password')}}

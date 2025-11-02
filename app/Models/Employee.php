@@ -22,6 +22,17 @@ class Employee extends Model
         'image'
     ];
 
+    protected $casts = [
+        'image' => 'array',
+    ];
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
+    
+
     public static function boot(){
         parent::boot();
 

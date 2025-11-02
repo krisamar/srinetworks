@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AEPSModel;
 use App\Models\ATMModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ATMController extends Controller
 {
@@ -17,6 +19,15 @@ class ATMController extends Controller
     {
         $transaction = ATMModel::orderBy('created_at', 'desc')->paginate(20);
         return view('atm.index',['transaction' => $transaction]);
+    }
+
+    public function download(): void {
+        // $pdf = Pdf::loadView('atm.index');
+     
+        // return $pdf->download();
+        $transaction = ATMModel::all();
+         
+        $pdf = Pdf::loadView('atm.index', ['transaction' => $transaction]);
     }
 
     /**
@@ -45,7 +56,7 @@ class ATMController extends Controller
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
+    { 
         $data = $request->all();
 
         $rules = [
@@ -55,7 +66,7 @@ class ATMController extends Controller
             'amount' => 'required|numeric',
             'via_app' => 'required',
             'via_bank' => 'required',
-            'sender_name' => 'required',
+            // 'sender_name' => 'required',
             'images' => 'nullable|image|mimes:jpeg,jpg,png,svg,gif|max:2048',
             'sender_mobile' => 'nullable|numeric',
             'remarks' => 'nullable'
@@ -89,11 +100,11 @@ class ATMController extends Controller
             ]);
         } else if($data['method'] == '1'){
             $rules['acc_no'] = 'required';
-            $rules['ifsc'] = 'required';
+            // $rules['ifsc'] = 'required';
         
             $messages = array_merge($messages, [
                 'acc_no.required' => 'Please enter the account number',
-                'ifsc.required' => 'Please enter the IFSC code',
+                // 'ifsc.required' => 'Please enter the IFSC code',
             ]);
         }
         
@@ -114,7 +125,7 @@ class ATMController extends Controller
 
         ATMModel::create($data);
 
-        return redirect()->route('atm.create')->with('flash_success', 'The transaction details added successfully');
+        return redirect()->route('atm.index')->with('flash_success', 'The transaction details added successfully');
     }
 
     /**
@@ -147,9 +158,9 @@ class ATMController extends Controller
             'amount' => 'required|numeric',
             'via_app' => 'required',
             'via_bank' => 'required',
-            'sender_name' => 'required',
+            // 'sender_name' => 'required',
             'images' => 'nullable|image|mimes:jpeg,jpg,png,svg,gif|max:2048',
-            'sender_mobile' => 'nullable|numeric',
+            // 'sender_mobile' => 'nullable|numeric',
             'remarks' => 'nullable'
         ];
 
@@ -181,11 +192,11 @@ class ATMController extends Controller
             ];
         } else {
             $rules['acc_no'] = 'required';
-            $rules['ifsc'] = 'required';
+            // $rules['ifsc'] = 'required';
         
             $messages = [
                 'acc_no.required' => 'Please enter the account number',
-                'ifsc.required' => 'Please enter the IFSC code',
+                // 'ifsc.required' => 'Please enter the IFSC code',
             ];
         }
 
@@ -217,67 +228,68 @@ class ATMController extends Controller
             $transaction->delete();
             return response()->json(['message' => 'The transaction deleted successfully'], 200);
         }else{
-            return response()->json(['message' => 'There are something issue to delete transaction details'], 404);
+            return response()->json( ['message' => 'There are something issue to delete transaction details'], 404);
         }
     }
 
 // Daily transactions method (for the first graph - keep this as is)
 public function getDailyTransactions()
 {
-    $currentMonth = Carbon::now()->format('Y-m'); // Get YYYY-MM
-    $today = Carbon::now()->day; // Get today's date (day number)
+    $currentMonth = Carbon::now()->format('Y-m');
+    $today = Carbon::now()->day;
 
     $labels = [];
-    $totalTransactions = [];
+    $atmTransactions = [];
+    $aepsTransactions = [];
 
-    for ($day = 1; $day <= $today; $day++) { // Loop from Day 1 to Today
-        $date = Carbon::now()->format('Y-m-') . str_pad($day, 2, '0', STR_PAD_LEFT); // YYYY-MM-DD
+    for ($day = 1; $day <= $today; $day++) {
+        $date = Carbon::now()->format('Y-m-') . str_pad($day, 2, '0', STR_PAD_LEFT);
         $labels[] = "Day " . $day;
 
-        // Fetch total transaction amount per day
-        $transaction = ATMModel::selectRaw("COALESCE(SUM(amount), 0) as total_amount")
-            ->whereDate('date', $date)
-            ->first();
+        $atm = ATMModel::selectRaw("COALESCE(SUM(amount), 0) as total")->whereDate('date', $date)->first();
+        $aeps = AEPSModel::selectRaw("COALESCE(SUM(amount), 0) as total")->whereDate('date', $date)->first();
 
-        $totalTransactions[] = (int) ($transaction->total_amount ?? 0);
+        $atmTransactions[] = (int) ($atm->total ?? 0);
+        $aepsTransactions[] = (int) ($aeps->total ?? 0);
     }
 
     return response()->json([
-        'labels' => $labels, // Days from 1 to Today
-        'totalTransactions' => $totalTransactions // Total transactions per day
+        'labels' => $labels,
+        'atmTransactions' => $atmTransactions,
+        'aepsTransactions' => $aepsTransactions
     ]);
 }
 
+
 // New method for monthly transactions within the current year
 public function getMonthlyTransactions()
-    {
-        try {
-            $currentYear = Carbon::now()->year;
-            $labels = [];
-            $monthlyTransactions = [];
+{
+    $currentYear = Carbon::now()->year;
+    $labels = [];
+    $atmTransactions = [];
+    $aepsTransactions = [];
 
-            for ($month = 1; $month <= 12; $month++) {
-                $monthName = Carbon::create($currentYear, $month, 1)->format('F');
-                $labels[] = $monthName;
+    for ($month = 1; $month <= 12; $month++) {
+        $monthName = Carbon::create($currentYear, $month, 1)->format('F');
+        $labels[] = $monthName;
 
-                $startDate = Carbon::create($currentYear, $month, 1)->startOfMonth()->format('Y-m-d');
-                $endDate = Carbon::create($currentYear, $month, 1)->endOfMonth()->format('Y-m-d');
+        $start = Carbon::create($currentYear, $month, 1)->startOfMonth();
+        $end = Carbon::create($currentYear, $month, 1)->endOfMonth();
 
-                $transaction = ATMModel::selectRaw("COALESCE(SUM(amount), 0) as total_amount")
-                    ->whereBetween('date', [$startDate, $endDate])
-                    ->first();
+        $atm = ATMModel::selectRaw("COALESCE(SUM(amount), 0) as total")->whereBetween('date', [$start, $end])->first();
+        $aeps = AEPSModel::selectRaw("COALESCE(SUM(amount), 0) as total")->whereBetween('date', [$start, $end])->first();
 
-                $monthlyTransactions[] = (int) ($transaction->total_amount ?? 0);
-            }
-
-            return response()->json([
-                'labels' => $labels,
-                'monthlyTransactions' => $monthlyTransactions
-            ]);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Failed to fetch monthly transactions'], 500);
-        }
+        $atmTransactions[] = (int) ($atm->total ?? 0);
+        $aepsTransactions[] = (int) ($aeps->total ?? 0);
     }
+
+    return response()->json([
+        'labels' => $labels,
+        'atmTransactions' => $atmTransactions,
+        'aepsTransactions' => $aepsTransactions
+    ]);
+}
+
 
 // Combined method to get both daily and monthly data in one request (optional)
 public function getAllTransactionData()
@@ -357,19 +369,30 @@ public function getAllTransactionData()
 
     public function getDailyIncome()
     {
-        $incomeData = DB::table('table_income')
-            ->selectRaw('DATE(date) as income_date, SUM(amount) as total_income')
-            ->groupBy('income_date')
-            ->orderBy('income_date', 'ASC')
-            ->get();
-    
-        $labels = $incomeData->pluck('income_date')->toArray();
-        $totalIncome = $incomeData->pluck('total_income')->toArray();
-    
-        return response()->json([
-            'labels' => $labels, 
-            'totalIncome' => $totalIncome
-        ]);
+       // Current month range
+    $startOfMonth = Carbon::now()->startOfMonth()->toDateString(); // e.g. 2025-11-01
+    $endOfMonth   = Carbon::now()->endOfMonth()->toDateString();   // e.g. 2025-11-30
+
+    $incomeData = DB::table('table_income')
+        ->selectRaw('DATE(date) as income_date, SUM(amount) as total_income')
+        ->whereBetween('date', [$startOfMonth, $endOfMonth])  // ✅ only this month
+        ->groupBy('income_date')
+        ->orderBy('income_date', 'ASC')
+        ->get();
+
+    $labels = $incomeData->pluck('income_date')
+        ->map(fn($d) => Carbon::parse($d)->format('d-m-Y')); // pretty date format
+
+    $totalIncome = $incomeData->pluck('total_income');
+
+    return response()->json([
+        'labels'       => $labels,
+        'totalIncome'  => $totalIncome,
+        'start'        => Carbon::parse($startOfMonth)->format('d-m-Y'),
+        'end'          => Carbon::parse($endOfMonth)->format('d-m-Y'),
+        'month'        => Carbon::now()->format('F'),
+        'year'         => Carbon::now()->year,
+    ]);
     }
 
 public function getMonthlyIncome()
@@ -388,5 +411,50 @@ public function getMonthlyIncome()
         'monthlyIncome' => $monthlyIncome
     ]);
 }
+
+    public function aepsstore(Request $request){
+        $data = $request->all();
+        $data['date'] = Carbon::today()->format('Y-m-d');
+
+        if($data){
+            AEPSModel::create($data);
+            return response()->json(['message' => 'The transaction add successfully'], 200);
+        } else {
+            return response()->json(['message' => 'There are something issue to transaction details'], 404);
+        }
+        
+    }
+
+    public function aepsindex(){
+        $transaction = AEPSModel::orderBy('created_at','desc')->paginate(20);
+        return view('aeps.index',['transaction' => $transaction]);
+
+    }
+
+    public function aepsedit(AEPSModel $transaction)
+{
+    // $transaction = AEPSModel::findOrFail($transactions);
+    $transaction->mode = 1;
+    return response()->json($transaction);
+}
+
+public function aepsupdate(Request $request, AEPSModel $transaction)
+{
+    // $transaction = AEPSModel::findOrFail($transactions);
+
+    $transaction->update($request->all());
+
+    return response()->json(['message' => 'Transaction updated successfully.']);
+}
+
+
+    public function aepsdestroy(AEPSModel $transaction){
+        if($transaction){
+            $transaction->delete();
+            return response()->json(['message' => 'The transaction deleted successfully'], 200);
+        }else{
+            return response()->json( ['message' => 'There are something issue to delete transaction details'], 404);
+        }
+    }
 
 }

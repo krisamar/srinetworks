@@ -10,8 +10,8 @@ use App\Http\Controllers\TNUWWBController;
 //     return view('welcome');
 // });
 
-Route::any('/',[LoginController::class,'userLogin'])->name('userLogin');
-Route::any('/adminLogin',[LoginController::class,'login'])->name('login');
+Route::any('/userLogin',[LoginController::class,'userLogin'])->name('userLogin');
+Route::any('/',[LoginController::class,'login'])->name('login');
 Route::any('/authenticate',[LoginController::class,'authenticate'])->name('authenticate');
 Route::any('/logout',[LoginController::class,'logout'])->name('logout');
 Route::any('/welcomePage',[LoginController::class,'sriNet'])->name('sriNet');
@@ -22,9 +22,13 @@ Route::any('destroy/{employee}',[EmployeeController::class,'destroy'])->name('de
 Route::any('edit/{employee}',[EmployeeController::class,'edit'])->name('edit');
 Route::any('update/{employee}',[EmployeeController::class,'update'])->name('update');
 Route::any('show/{employee}',[EmployeeController::class,'show'])->name('show');
-
+Route::any('forgot-password',[LoginController::class,'showForgotPasswordForm'])->name('forgot.password.get');
+Route::any('forgot-password',[LoginController::class,'submitForgotPasswordForm'])->name('forgot.password.post');
+Route::any('reset-password',[LoginController::class,'showResetPasswordForm'])->name('reset.password.get');
+Route::any('reset-password',[LoginController::class,'submitResetPasswordForm'])->name('reset.password.post');
 // Route::group(['middleware' => ['auth:user,admin']], function () {
 // Route::group(['middleware' => 'auth:web'], function(){
+Route::delete('/employee/{employee}/image/{index}', [EmployeeController::class, 'deleteImage'])->name('employee.image.delete');
 
 // });
 
@@ -35,9 +39,16 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::any('/destroyIncome/{income}',[ATMController::class,'destroyIncome'])->name('destroyIncome');
     Route::get('/daily-income', [ATMController::class, 'getDailyIncome']);
     Route::get('/monthly-income', [ATMController::class, 'getMonthlyIncome']);
+    Route::any('/pdf',[ATMController::class,'download'])->name('download');
+
     Route::get('/transaction/index',[ATMController::class,'index'])->name('atm.index');
     Route::get('/transaction/create',[ATMController::class,'create'])->name('atm.create');
     Route::post('/transaction/store',[ATMController::class,'store'])->name('atm.store');
+    Route::post('aeps',[ATMController::class,'aepsstore'])->name('aepsstore');
+    Route::any('aeps/index',[ATMController::class,'aepsindex'])->name('aepsindex');
+    Route::get('/aeps/{transaction}/edit', [ATMController::class, 'aepsedit'])->name('aepsedit');
+    Route::any('/aeps/{transaction}', [ATMController::class, 'aepsupdate'])->name('aepsupdate');
+    Route::any('aeps/destroy/{transaction}',[ATMController::class,'aepsdestroy'])->name('aepsdestroy');
     Route::any('/transaction/destroy/{transaction}',[ATMController::class,'destroy'])->name('atm.destroy');
     Route::any('/transaction/edit/{transaction}',[ATMController::class,'edit'])->name('atm.edit');
     Route::any('/transaction/update/{transaction}',[ATMController::class,'update'])->name('atm.update');
@@ -53,5 +64,7 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::any('/tnuwwb/edit/{data}',[TNUWWBController::class,'edit'])->name('tnuwwb.edit');
     Route::any('/tnuwwb/update/{data}',[TNUWWBController::class,'update'])->name('tnuwwb.update');
     Route::any('/tnuwwb/show/{data}',[TNUWWBController::class,'show'])->name('tnuwwb.show');
+    Route::get('/tnuwwb/{id}/pdf', [TnuwwbController::class, 'downloadPdf'])->name('tnuwwb.pdf');
+
 });
 

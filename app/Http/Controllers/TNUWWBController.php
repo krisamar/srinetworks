@@ -7,6 +7,7 @@ use App\Models\TNUWWBModel;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use PDF;
 
 class TNUWWBController extends Controller
 {
@@ -73,8 +74,8 @@ class TNUWWBController extends Controller
 
             TNUWWBModel::create($data);
             DB::commit();
-
-            return redirect()->back()->with('flash_success','Details Created Successfully');
+            return redirect()->route('tnuwwb.index')->with('flash_success','Details Created Successfully');
+            // return redirect()->back()->with('flash_success','Details Created Successfully');
         }catch(\Exception $e){
             DB::rollBack();
             return back()->with('flash_error', $e->getMessage());
@@ -102,9 +103,9 @@ class TNUWWBController extends Controller
      */
     public function update(Request $request, TNUWWBModel $data)
     {
-        try{
-            DB::beginTransaction();
-            $data = $request->all();
+        // try{
+            // DB::beginTransaction();
+            $datas = $request->all();
             $rules = [
                 'date' => 'required',
                 'application_no' => 'required',
@@ -136,19 +137,20 @@ class TNUWWBController extends Controller
                 'type.required' => 'Please select the Type',
             ];
 
-            $validator = Validator::make($data, $rules, $message);
+            $validator = Validator::make($datas, $rules, $message);
             if($validator->fails()){
                 return redirect()->back()->withErrors($validator)->withInput();
             }
 
-            $data()->update($data);
-            DB::commit();
+            $data->update($datas);
+            // DB::commit();
+            return redirect()->route('tnuwwb.index')->with('flash_success','Details Updated Successfully');
 
-            return redirect()->back()->with('flash_success','Details Updated Successfully');
-        }catch(\Exception $e){
-            DB::rollBack();
-            return back()->with('flash_error', $e->getMessage());
-        }
+            // return redirect()->back()->with('flash_success','Details Updated Successfully');
+        // }catch(\Exception $e){
+        //     DB::rollBack();
+        //     return back()->with('flash_error', $e->getMessage());
+        // }
     }
 
     /**
@@ -162,5 +164,16 @@ class TNUWWBController extends Controller
         } else {
             return response()->json(['message' => 'There something issue delete the TNUWWB details'], 404);
         }
+    }
+
+    public function downloadPdf($id)
+    {
+        $data = TNUWWBModel::findOrFail($id);
+
+        $pdf = PDF::loadView('tnuwwb.pdf', compact('data'))->setPaper('A4', 'portrait');
+
+        // return $pdf->download('TNUWWB_'.$data->application_no.'.pdf');
+        return $pdf->stream('TNUWWB_'.$data->application_no.'.pdf');
+
     }
 }

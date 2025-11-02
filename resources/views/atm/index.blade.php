@@ -3,6 +3,7 @@
 @section('title', 'Transaction Index')
 
 @section('content')
+<script src="https://cdn.datatables.net/plug-ins/1.13.6/sorting/date-eu.js"></script>
 
     <script>
         function deleteUser(transactions){
@@ -42,7 +43,10 @@
         $(document).ready(function() {
             initializeDataTable('#transaction-table', {
                 scrollY: '520px',
-                order: [[1, 'desc']]  
+                columnDefs: [
+                    { type: 'date-eu', targets: 1 } // dd-mm-yyyy format-க்கு correct sorting
+                ],
+                order: [[1, 'desc']]
             });
         });
     </script>
@@ -57,7 +61,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <a href="{{ route('atm.create') }}" class="btn btn-success float-end">Add Transaction</a>
-
+                <!-- <a href="{{ route('download') }}" class="btn btn-success float-end">Download PDF</a> -->
             </div>
         </div>
         
@@ -84,7 +88,10 @@
                     @foreach($transaction as $transactions)
                     <tr>
                         <td class="text-center">{{ $i++ }}</td>
-                        <td class="text-center">{{ date('d-m-Y', strtotime($transactions->date)) }}</td>
+                        <td class="text-center" data-order="{{ $transactions->date }}">
+                            {{ date('d-m-Y', strtotime($transactions->date)) }}
+                        </td>
+
                         <td class="text-center">
                             @if($transactions->method == 0)
                                 {{ $transactions->mobile_number }}
@@ -107,14 +114,20 @@
                         <!-- <td>
                             <img src="{{ asset('images/transaction/' . $transactions->images) }}" alt="profile" style="height: 50px; width: 50px;object-fit:contain">
                         </td> -->
-                        <td>
-                            <a href="{{route('atm.edit',['transaction'=>$transactions])}}" class="bg-info p-2 text-white text-decoration-none">
-                                <i class="fas fa-edit text-white"></i>
-                            </a>
-                            <span class="bg-danger p-2" onclick="deleteUser('{{$transactions->id}}')">
-                                <i class="fa fa-trash text-white"></i>
-                            </span>
-                        </td>
+                       <td>
+    <!-- Edit Button -->
+    <a href="{{ route('atm.edit', ['transaction' => $transactions]) }}" 
+       class="btn btn-sm btn-info text-white mr-2 text-decoration-none">
+        <i class="fas fa-edit"></i>
+    </a>
+
+    <!-- Delete Button -->
+    <button type="button" class="btn btn-sm btn-danger text-white" 
+            onclick="deleteUser('{{ $transactions->id }}')">
+        <i class="fa fa-trash"></i>
+    </button>
+</td>
+
                     </tr>
                     @endforeach
                 </tbody>
