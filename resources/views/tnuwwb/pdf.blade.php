@@ -5,9 +5,9 @@
     <title>TNUWWB Report - {{ $data->application_no }}</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@100..900&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'DejaVu Sans', sans-serif;
@@ -19,35 +19,63 @@
         .watermark {
             position: fixed;
             top: 35%;
-            left: 30%;
-            opacity: 0.08;
-            width: 300px;
+            left: 12%;
+            opacity: 0.2;
+            width: 500px;
             z-index: -1;
         }
 
-        /* Header Section */
-        .header {
-            /* text-align: right; */
-            border-bottom: 2px solid #333;
-            padding-bottom: 25px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
+/* Header Section */
+/* Header Section */
+.header {
+    border-bottom: 2px solid #333;
+    padding: 8px 0;
+    margin-bottom: 20px;
+}
 
-        .header img {
-            height: 80px;
-            text-align: left;
-        }
+.header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
 
-        .company-info {
-            text-align: left;
-            font-size: 12px;
-            line-height: 1.4;
-            position: absolute;
-            top: 0;
-            right: 0;
-        }
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    float: left;
+}
+
+.header-left img {
+    width: 130px;
+    height: auto;
+    object-fit: contain;
+
+}
+
+.header-left .company-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2a4d69;
+}
+.company-name{
+    position: absolute;
+    padding-top: 10px;
+}
+
+.company-info {
+    text-align: right;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.header h2 {
+    text-align: center;
+    margin: 0;
+    color: #2a4d69;
+}
 
         .header h2 {
             text-align: center;
@@ -70,7 +98,7 @@
         }
 
         th {
-            background: #f0f0f0;
+            /* background: #f0f0f0; */
             text-align: left;
         }
 
@@ -83,14 +111,14 @@
             color: #666;
         }
         
-@font-face {
-    font-family: 'NotoSansTamil';
-    src: url('{{ storage_path("fonts/NotoSansTamil-Regular.ttf") }}') format('truetype');
-}
+        @font-face {
+            font-family: 'NotoSansTamil';
+            src: url('{{ storage_path("fonts/NotoSansTamil-Regular.ttf") }}') format('truetype');
+        }
 
-.tamil-text {
-    font-family: 'Latha', 'NotoSansTamil', sans-serif !important;
-}
+        .tamil-text {
+            font-family: 'Latha', 'NotoSansTamil', sans-serif !important;
+        }
 
 
 
@@ -100,17 +128,28 @@
     <!-- Watermark -->
     <img src="{{ public_path('images/srinetworks.jpg') }}" class="watermark" alt="Watermark">
 
-    <!-- Header -->
-    <div class="header">
-        <img src="{{ public_path('images/srinetworks.jpg') }}" alt="Logo">
-        <div class="company-info">
-            <strong style="font-size:18px;">Sri Networks</strong><br>
-            Main Bazaar, Veeravanallur.<br>
-            <span class=""><i class="fa fa-phone"></i>8300456607</span><br>
-            <span class=""><i class="fa fa-envelope"></i>srinetvvr@gmail.com</span>
+<!-- Header -->
+<!-- Header -->
+<div class="header">
+    <div class="header-inner">
+        
+        <!-- Left section -->
+        <div class="header-left">
+            <img src="{{ public_path('images/srinetworks.jpg') }}" alt="Logo">
+            <span class="company-name">SRI NETWORKS</span>
         </div>
         
+        <!-- Right section -->
+        <div class="company-info">
+            Main Bazaar, Veeravanallur.<br>
+            <i class="fa fa-phone"></i> 8300456607<br>
+            <i class="fa fa-envelope"></i> srinetvvr@gmail.com
+        </div>
+
     </div>
+</div>
+
+
 <div class="tnuwwb-header" style="text-align:center; margin-bottom:20px;">
     <table style="width:100%; border:none;">
         <tr>

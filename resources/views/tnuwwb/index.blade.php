@@ -101,22 +101,21 @@
                         <td>{{$tent[$datas->type] ?? 'Unknown'}}</td>
                         <td>{{ $datas['remarks'] }}</td>
                         <td>
-    <!-- Edit Button -->
-    <a href="{{ route('tnuwwb.edit', ['data' => $datas]) }}" class="btn btn-sm btn-info text-white mr-2">
-        <i class="fas fa-edit"></i>
-    </a>
+                            <!-- Edit Button -->
+                            <a href="{{ route('tnuwwb.edit', ['data' => $datas]) }}" class="btn btn-sm btn-info text-white mr-2">
+                                <i class="fas fa-edit"></i>
+                            </a>
 
-    <!-- Delete Button -->
-    <button type="button" class="btn btn-sm btn-danger text-white mr-2" onclick="deleteDetails('{{ $datas->id }}')">
-        <i class="fa fa-trash"></i>
-    </button>
+                            <!-- Delete Button -->
+                            <button type="button" class="btn btn-sm btn-danger text-white mr-2" onclick="deleteDetails('{{ $datas->id }}')">
+                                <i class="fa fa-trash"></i>
+                            </button>
 
-    <!-- PDF Download Button -->
-    <a href="{{ route('tnuwwb.pdf', $datas->id) }}" class="btn btn-sm btn-warning text-white" target="_blank">
-        <i class="fas fa-file-pdf"></i>
-    </a>
-</td>
-
+                            <!-- PDF Download Button -->
+                            <a href="{{ route('tnuwwb.pdf', $datas->id) }}" class="btn btn-sm btn-warning text-white" target="_blank">
+                                <i class="fas fa-file-pdf"></i>
+                            </a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>

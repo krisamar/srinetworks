@@ -115,19 +115,18 @@
                             <img src="{{ asset('images/transaction/' . $transactions->images) }}" alt="profile" style="height: 50px; width: 50px;object-fit:contain">
                         </td> -->
                        <td>
-    <!-- Edit Button -->
-    <a href="{{ route('atm.edit', ['transaction' => $transactions]) }}" 
-       class="btn btn-sm btn-info text-white mr-2 text-decoration-none">
-        <i class="fas fa-edit"></i>
-    </a>
+                            <!-- Edit Button -->
+                            <a href="{{ route('atm.edit', ['transaction' => $transactions]) }}" 
+                            class="btn btn-sm btn-info text-white mr-2 text-decoration-none">
+                                <i class="fas fa-edit"></i>
+                            </a>
 
-    <!-- Delete Button -->
-    <button type="button" class="btn btn-sm btn-danger text-white" 
-            onclick="deleteUser('{{ $transactions->id }}')">
-        <i class="fa fa-trash"></i>
-    </button>
-</td>
-
+                            <!-- Delete Button -->
+                            <button type="button" class="btn btn-sm btn-danger text-white" 
+                                    onclick="deleteUser('{{ $transactions->id }}')">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
