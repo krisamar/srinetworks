@@ -127,6 +127,23 @@
         margin-top: 10px;
     }
 }
+
+.flash-container {
+    position: fixed;
+    top: 10px;              /* adjust if you have a navbar */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    z-index: 2000;          /* keep above everything */
+    pointer-events: none;   /* so it doesn't block clicks */
+}
+
+.flash-message {
+    pointer-events: auto;   /* restore click for close button if needed */
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    margin-bottom: 8px;
+}
 </style>
 
 
@@ -210,7 +227,13 @@ function initializeDataTable(tableId, customOptions = {}) {
   }
 }
 
-
+setTimeout(function() {
+    document.querySelectorAll('.flash-message').forEach(function(el) {
+        el.style.transition = 'opacity 1s ease';
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 1000);
+    });
+}, 1000); // 10000 ms = 10 seconds
 
 </script>
 
@@ -263,20 +286,31 @@ function initializeDataTable(tableId, customOptions = {}) {
     </nav>
 
     {{-- Page Content --}}
-    <div class="container-fluid mt-4">
+    <div class="container-fluid">
+      <div class="flash-container" style="width:300px;">
 			@if (session('flash_success'))
-					<div class="alert alert-success alert-dismissible fade show text-center">
-							{!! session('flash_success') !!}
-							<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-					</div>
-			@endif
+          <div class="alert alert-success text-center flash-message" role="alert">
+              <strong><i class="fa fa-check-circle"></i> {{ session('flash_success') }}</strong>
+          </div>
+      @endif
 
-			@if (session('flash_error'))
-					<div class="alert alert-danger alert-dismissible fade show text-center">
-							{!! session('flash_error') !!}
-							<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-					</div>
-			@endif
+      @if (session('flash_error'))
+          <div class="alert alert-danger text-center flash-message" role="alert">
+              <strong><i class="fa fa-exclamation-circle"></i> {{ session('flash_error') }}</strong>
+          </div>
+      @endif
+
+      @if ($errors->any())
+          <div class="alert alert-danger text-center flash-message" role="alert">
+              <strong><i class="fa fa-exclamation-circle"></i> Please fix the following errors:</strong>
+              <ul class="mb-0">
+                  @foreach ($errors->all() as $error)
+                      <li>{{ $error }}</li>
+                  @endforeach
+              </ul>
+          </div>
+      @endif
+</div>
 
       @yield(section: 'content')
     </div>

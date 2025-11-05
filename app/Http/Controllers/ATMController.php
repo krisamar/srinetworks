@@ -363,7 +363,7 @@ public function getAllTransactionData()
                 'created_at' => now(), // Adding timestamps manually
                 'updated_at' => now()
             ]);
-            return redirect()->back()->with('flash_success','')->with('', $income);
+            return redirect()->back()->with('flash_success', 'Income added successfully!');
         }
     }
 
