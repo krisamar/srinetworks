@@ -18,10 +18,10 @@
         /* Watermark Logo */
         .watermark {
             position: fixed;
-            top: 35%;
+            top: 10%;
             left: 12%;
-            opacity: 0.2;
-            width: 500px;
+            opacity: 0.1;
+            width: 400px;
             z-index: -1;
         }
 
@@ -150,31 +150,31 @@
 </div>
 
 
-<div class="tnuwwb-header" style="text-align:center; margin-bottom:20px;">
+<!-- <div class="tnuwwb-header" style="text-align:center; margin-bottom:20px;">
     <table style="width:100%; border:none;">
-        <tr>
+        <tr> -->
             <!-- <td style="width:15%; text-align:right;"> -->
                 <!-- <img src="images/govt-logo.png" alt="Govt Logo" style="height:80px;"> -->
             <!-- <img src="{{ asset('images/govt-logo.png') }}" alt="Logo" style="width:100px;"> -->
  
 
             <!-- </td> -->
-            <td style="width:70%; text-align:center; vertical-align:middle;">
+            <!-- <td style="width:70%; text-align:center; vertical-align:middle;"> -->
                 <!-- <div style="font-size:18px; font-weight:bold;tamil-text">
                     தமிழ்நாடு அமைப்புசாரா தொழிலாளர்கள் நலவாரியம்
                 </div> -->
-                <div style="font-size:18px;font-weight:bold">
+                <!-- <div style="font-size:18px;font-weight:bold">
                    <h4> Tamil Nadu Unorganised Workers Welfare Board</h4>
                 </div>
-            </td>
+            </td> -->
             <!-- <td style="width:15%; text-align:left;"> -->
                 <!-- <img src="images/statue.jpg" alt="Statue Logo" style="height:80px;"> -->
-<!-- <img src="{{ asset('images/statue.jpg') }}" alt="Logo" style="width:100px;"> -->
+            <!-- <img src="{{ asset('images/statue.jpg') }}" alt="Logo" style="width:100px;"> -->
 
             <!-- </td> -->
-        </tr>
+        <!-- </tr>
     </table>
-</div>
+</div> -->
 
 
 
@@ -209,19 +209,19 @@
         </tr>
     @endif
 
-    @if(!empty($data->status))
+    <!-- @if(!empty($data->status))
         <tr>
             <th>Status</th>
             <td>{{ config('const.status')[$data->status] ?? 'Unknown' }}</td>
         </tr>
-    @endif
+    @endif -->
 
-    @if(!empty($data->others))
+    <!-- @if(!empty($data->others))
         <tr>
             <th>Others</th>
             <td>{{ $data->others }}</td>
         </tr>
-    @endif
+    @endif -->
 
     @if(!empty($data->id_no))
         <tr>
@@ -248,8 +248,8 @@
     </table>
 
     <!-- Footer -->
-    <div class="footer">
+    <!-- <div class="footer">
         Generated on {{ now()->format('d-m-Y H:i') }} | © {{ date('Y') }} Sri Networks
-    </div>
+    </div> -->
 </body>
 </html>

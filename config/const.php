@@ -17,7 +17,8 @@ return [
             9 => 'Mobisafar', 
             10 => 'Dhankind',
             11 => 'Net Banking',
-            12 => 'SBI Pay'
+            12 => 'SBI Pay',
+            13 => 'TMB'
         ],
         
     'via_bank' => 
@@ -30,7 +31,8 @@ return [
             6 => 'ICICI Bank',
             7 => 'Ravi SBI SB',
             8 => 'Ravi IOB SB',
-            9 => 'Devi SBI SB'
+            9 => 'Devi SBI SB',
+            10 => 'TMB'
         ],
 
     'aeps' => [
@@ -41,7 +43,7 @@ return [
 
     'paid_details' => [ 0 => 'Paid', 1 => 'Not Paid'],
 
-    'status' => [1 => 'Pending', 2 => 'Return', 3 => 'Success', 4 => 'Others'],
+    'status' => [1 => 'Pending', 2 => 'Return', 3 => 'Success', 4 => 'Rejected'],
 
     'type' => [1 => 'New Application', 2 => 'Renewal', 3 => 'Pension', 4 => 'Claim', 5 => 'Life Certificate'],
     
