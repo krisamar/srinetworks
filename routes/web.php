@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CertificateController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\ATMController;
@@ -65,6 +66,10 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::any('/tnuwwb/update/{data}',[TNUWWBController::class,'update'])->name('tnuwwb.update');
     Route::any('/tnuwwb/show/{data}',[TNUWWBController::class,'show'])->name('tnuwwb.show');
     Route::get('/tnuwwb/{id}/pdf', [TnuwwbController::class, 'downloadPdf'])->name('tnuwwb.pdf');
-
+    Route::post('certificate',[CertificateController::class,'store'])->name('certificatestore');
+    Route::any('certificate/index',[CertificateController::class,'index'])->name('certificateindex');
+    Route::get('/certificate/{transaction}/edit', [CertificateController::class, 'edit'])->name('certificateedit');
+    Route::put('/certificate/{transaction}', [CertificateController::class, 'update'])->name('certificateupdate');
+    Route::delete('certificate/destroy/{transaction}',[CertificateController::class,'destroy'])->name('certificatedestroy');
 });
 

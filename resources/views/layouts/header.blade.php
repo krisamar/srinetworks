@@ -275,6 +275,7 @@ setTimeout(function() {
                             <li><a class="dropdown-item" href="{{ route('index') }}">Employee</a></li>
                             <li><a class="dropdown-item" href="{{ route('atm.index') }}">Transaction</a></li>
                             <li><a class="dropdown-item" href="{{ route('tnuwwb.index') }}">TNUWWB</a></li>
+                            <li><a class="dropdown-item" href="{{ route('certificateindex') }}">Certificate</a></li>
                             <!-- <li><hr class="dropdown-divider"></li>
                             <li></li> -->
                         </ul>
