@@ -242,9 +242,10 @@ $(document).ready(function () {
                             <td>{{ $i++ }}</td>
                             <td>{{ \Carbon\Carbon::parse($datas['date'])->format('d-m-Y') }}</td>
                             <td>
-                                <a href="{{ route('tnuwwb.show', ['data' => $datas]) }}" class="fw-bold text-primary text-decoration-none">
+                                <!-- <a href="{{ route('tnuwwb.show', ['data' => $datas]) }}" class="fw-bold text-primary text-decoration-none">
                                     {{ $datas->application_no }}
-                                </a>
+                                </a> -->
+                                {{ $datas->application_no }}
                             </td>
                             <td>{{ $datas['mobile'] }}</td>
                             <td>{{ $datas['name'] }}</td>
