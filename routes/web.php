@@ -66,6 +66,7 @@ Route::group(['middleware' => 'auth:admin'], function(){
     Route::any('/tnuwwb/update/{data}',[TNUWWBController::class,'update'])->name('tnuwwb.update');
     Route::any('/tnuwwb/show/{data}',[TNUWWBController::class,'show'])->name('tnuwwb.show');
     Route::get('/tnuwwb/{id}/pdf', [TnuwwbController::class, 'downloadPdf'])->name('tnuwwb.pdf');
+    Route::post('tnuwwb/update-status/{id}', [TNUWWBController::class, 'updateStatus']);
     Route::post('certificate',[CertificateController::class,'store'])->name('certificatestore');
     Route::any('certificate/index',[CertificateController::class,'index'])->name('certificateindex');
     Route::get('/certificate/{transaction}/edit', [CertificateController::class, 'edit'])->name('certificateedit');

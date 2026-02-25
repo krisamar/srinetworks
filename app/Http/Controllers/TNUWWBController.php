@@ -176,4 +176,14 @@ class TNUWWBController extends Controller
         return $pdf->stream('TNUWWB_'.$data->application_no.'.pdf');
 
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $data = TNUWWBModel::findOrFail($id);
+        $request->validate(['status' => 'required']);
+        $data->status = $request->status;
+        $data->save();
+
+        return response()->json(['success' => true]);
+    }
 }

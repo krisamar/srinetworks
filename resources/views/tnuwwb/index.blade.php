@@ -83,6 +83,34 @@ $(document).ready(function () {
             }
         });
     }
+
+    // 🔹 Change Status via AJAX
+$(document).on('change', '.status-change', function () {
+
+    let id = $(this).data('id');
+    let status = $(this).val();
+
+    $.ajax({
+        url: "/tnuwwb/update-status/" + id,
+        type: "POST",
+        data: {
+            _token: "{{ csrf_token() }}",
+            status: status
+        },
+        success: function (response) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Updated!',
+                text: 'Status updated successfully.',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        },
+        error: function () {
+            Swal.fire('Error!', 'Something went wrong.', 'error');
+        }
+    });
+});
 </script>
 
 <style>
@@ -277,13 +305,15 @@ $(document).ready(function () {
                             @endphp
 
                             <td>
-                                <span class="badge rounded-pill {{ $badgeClass }}">
-                                    @if($datas->status == 4)
-                                        {{ $datas->others ?? 'Others' }}
-                                    @else
-                                        {{ $statusText }}
-                                    @endif
-                                </span>
+                                <select class="form-select form-select-sm status-change"
+                                        data-id="{{ $datas->id }}">
+                                    @foreach(config('const.status') as $key => $value)
+                                        <option value="{{ $key }}"
+                                            {{ $datas->status == $key ? 'selected' : '' }}>
+                                            {{ $value }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </td>
 
 
